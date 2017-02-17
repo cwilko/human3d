@@ -2,6 +2,8 @@
 
 A Walking 3D Person.
 
+See a video demo here : https://youtu.be/TyKssRmYhfg
+
 Human3D is a Windows application which demonstrates a framework for creating 3D animations. It was written in 2001 and demonstrates programming in Windows, DirectX, and C++. The framework makes use of Windows DirectX technology. Specifically, this revision of the software depends on DirectX 3 which is now very old. Fortunately DirectX is backwards compatible so any version of the SDK will suffice. 
 
 The models created in this demo were generated using 3D Studio, and exported as ASCII files to make it easy to read them in and process them.
