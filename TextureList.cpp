@@ -5,6 +5,8 @@
 #include "TextureList.h"
 #include <stdio.h>
 #include <tchar.h>
+#include <iostream>
+using namespace std;
 
 struct TEXTURESEARCHINFO
 	{
@@ -104,7 +106,7 @@ bool TextureList::LoadAllTextures(LPDIRECT3DDEVICE3 lpd3dDevice)
 
 	for (int n = 0; n < TotalTextures; n++ ) {
 
-		sprintf(filename,"%s.bmp",currentTexture->GetTextureName());
+		sprintf(filename,"resource/%s.bmp",currentTexture->GetTextureName());
 
 		if ( ! LoadTexture(lpd3dDevice, filename, currentTexture) )
 			return false;
@@ -124,19 +126,19 @@ bool TextureList::LoadAllTextures(LPDIRECT3DDEVICE3 lpd3dDevice)
 
 
 
-int TextureList::LoadTexture(LPDIRECT3DDEVICE3 lpd3dDevice, TCHAR *poo, Texture *pTexture)
+int TextureList::LoadTexture(LPDIRECT3DDEVICE3 lpd3dDevice, TCHAR *img, Texture *pTexture)
 {
 	
 
 	TCHAR* strExtension;
-
-    if( NULL == ( strExtension = _tcsrchr( poo, TEXT('.') ) ) )
+	cout << "Load Texture " << img << endl << flush;
+    if( NULL == ( strExtension = _tcsrchr( img, TEXT('.') ) ) )
         return 0;
 
-
+	cout << "Load Image " << img << endl << flush;
 	// If the bitmap wasn't a resource, try it as a file.
 	if( NULL == (
-        pTexture->hbmBitmap = (HBITMAP)LoadImage( NULL, poo,
+        pTexture->hbmBitmap = (HBITMAP)LoadImage( NULL, img,
                                         IMAGE_BITMAP, 0, 0, 
                                         LR_LOADFROMFILE|LR_CREATEDIBSECTION ))) return 0;
 
@@ -164,7 +166,6 @@ int TextureList::LoadTexture(LPDIRECT3DDEVICE3 lpd3dDevice, TCHAR *poo, Texture 
         return 0;
 
     if( ddHwDesc.dwFlags ) dwDeviceCaps = ddHwDesc.dpcTriCaps.dwTextureCaps;
-    else  return 0;
 
 	// Get the bitmap structure (to extract width, height, and bpp)
     BITMAP bm;

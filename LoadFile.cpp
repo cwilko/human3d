@@ -2,9 +2,12 @@
 
 #define D3D_OVERLOADS
 
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include "Frame.h"
-
+#include <WinBase.h>
+#include <stdlib.h>
+using namespace std;
 
 int ProcessVertices(Element *);
 int ProcessFaces(Element *);
@@ -15,6 +18,7 @@ int ProcessFaces(Element *);
 #define MAX_ELEMENTS 100
 
 ifstream fin;
+
 
 
 extern int LoadFile( char * filename, Frame * frame, int ElementCount) {
@@ -31,9 +35,9 @@ extern int LoadFile( char * filename, Frame * frame, int ElementCount) {
 	int			TotalElements = 0;
 	int			TotalVertices, TotalFaces;
 
-	
+cout << "Opening File" << endl;
 	fin.open(filename);
-
+cout << "File open" << endl;
 	while ( !fin.getline(string,256).eof() && TotalElements < ElementCount) {
 	
 		token = strtok(string, delim);
@@ -42,7 +46,7 @@ extern int LoadFile( char * filename, Frame * frame, int ElementCount) {
 		while( token != NULL ) {
 
 
-			if (!strcmp(token, "Named Element")) {
+			if (!strcmp(token, "Named object")) {
 
 
 				token = strtok(NULL,delim);
@@ -52,20 +56,24 @@ extern int LoadFile( char * filename, Frame * frame, int ElementCount) {
 									
 			if ( !strcmp( token, "Tri-mesh") ) {
 
-					token = strtok(NULL, delim);
-					token = strtok(NULL, delim);
+					token = strtok(NULL, ":\n\t, ");
+
+					token = strtok(NULL, ":\n\t, ");
 
 					TotalVertices = atoi(token);
 
-					token = strtok(NULL, delim);
+					token = strtok(NULL, ":\n\t, ");
+
+token = strtok(NULL, ":\n\t, ");
 
 					TotalFaces = atoi(token);
 
 					ElementList[TotalElements] = new Element(TotalVertices, TotalFaces);
-						
+
 					ElementList[TotalElements]->AssignID(ElementName);
+
 						
-					cout << "Start of Element: " << ElementList[TotalElements]->GetID() << endl;
+					cout << "Start of Element: " << ElementList[TotalElements]->GetID() << endl << flush;
 
 					ElementFlag = true;
 
@@ -108,8 +116,9 @@ extern int LoadFile( char * filename, Frame * frame, int ElementCount) {
 			
 		}	
 	}
-
+cout << "Closing File" << endl;
 	fin.close();
+cout << "File closed" << endl;
 
 	if (! TotalElements) return ERR;
 
@@ -290,14 +299,12 @@ int ProcessFaces( Element * thisElement) {
 		while( token != NULL ) {
 
 
-
 			if (!strcmp(token, "Face")) {
 	
 
 				// Find the Number of the current Vertex int the file
 
 				if (token = strtok(NULL, delim)) {
-
 					FaceNo = atoi(token);			
 			
 				} else return ERR;
@@ -306,7 +313,6 @@ int ProcessFaces( Element * thisElement) {
 				// Retrieve the X Value
 
 				if (token = strtok(NULL, delim)) {
-
 					if (!strcmp(token, "A")) {
 
 						if (token = strtok(NULL, delim)) {
@@ -323,11 +329,9 @@ int ProcessFaces( Element * thisElement) {
 				// Retrieve the Y Value
 
 				if (token = strtok(NULL, delim)) {
-
 					if (!strcmp(token, "B")) {
 
 						if (token = strtok(NULL, delim)) {
-
 							VertexB = atoi(token);
 
 						} else return ERR;
@@ -354,11 +358,11 @@ int ProcessFaces( Element * thisElement) {
 				} else return ERR;
 
 
-				thisElement->FaceList[FaceCount].x	=	thisElement->VertexList[VertexA].x;
-				thisElement->FaceList[FaceCount].y	=	thisElement->VertexList[VertexA].y;
-				thisElement->FaceList[FaceCount].z	=	thisElement->VertexList[VertexA].z;
-				thisElement->FaceList[FaceCount].tu	=	thisElement->VertexList[VertexA].tu;
-				thisElement->FaceList[FaceCount].tv	=	thisElement->VertexList[VertexA].tv;
+				thisElement->FaceList[FaceCount].x	=	thisElement->VertexList[VertexC].x;
+				thisElement->FaceList[FaceCount].y	=	thisElement->VertexList[VertexC].y;
+				thisElement->FaceList[FaceCount].z	=	thisElement->VertexList[VertexC].z;
+				thisElement->FaceList[FaceCount].tu	=	thisElement->VertexList[VertexC].tu;
+				thisElement->FaceList[FaceCount].tv	=	thisElement->VertexList[VertexC].tv;
 				FaceCount++;
 
 				thisElement->FaceList[FaceCount].x	=	thisElement->VertexList[VertexB].x;
@@ -368,17 +372,17 @@ int ProcessFaces( Element * thisElement) {
 				thisElement->FaceList[FaceCount].tv	=	thisElement->VertexList[VertexB].tv;
 				FaceCount++;
 
-				thisElement->FaceList[FaceCount].x	=	thisElement->VertexList[VertexC].x;
-				thisElement->FaceList[FaceCount].y	=	thisElement->VertexList[VertexC].y;
-				thisElement->FaceList[FaceCount].z	=	thisElement->VertexList[VertexC].z;
-				thisElement->FaceList[FaceCount].tu	=	thisElement->VertexList[VertexC].tu;
-				thisElement->FaceList[FaceCount].tv	=	thisElement->VertexList[VertexC].tv;
+				thisElement->FaceList[FaceCount].x	=	thisElement->VertexList[VertexA].x;
+				thisElement->FaceList[FaceCount].y	=	thisElement->VertexList[VertexA].y;
+				thisElement->FaceList[FaceCount].z	=	thisElement->VertexList[VertexA].z;
+				thisElement->FaceList[FaceCount].tu	=	thisElement->VertexList[VertexA].tu;
+				thisElement->FaceList[FaceCount].tv	=	thisElement->VertexList[VertexA].tv;
 				FaceCount++;
 
-				
-				cout << "Face " << FaceNo;
+		
+				cout << "Face " << FaceNo << endl << flush;
 
-				cout << "\tA:" << VertexA << "\tB:" << VertexB << "\tC:" << VertexC << endl;
+				cout << "\tA:" << VertexA << "\tB:" << VertexB << "\tC:" << VertexC << endl << flush;
 
 
 

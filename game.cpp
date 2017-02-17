@@ -15,6 +15,8 @@
 #include <d3d.h>
 #include <tchar.h>
 #include "Object.h"
+#include <iostream>
+using namespace std;
 
 
 //-----------------------------------------------------------------------------
@@ -31,7 +33,7 @@ static LPDIRECT3DMATERIAL3 g_pmtrlObjectMtrl2 = NULL;
 static LPDIRECT3DLIGHT     g_pLight              = NULL;
 static D3DVERTEX		tester[6];
 
-static Object	* Bird			= new Object(12);
+static Object	* Human			= new Object(12);
 static TextureList	* Textures	= new TextureList();
 
 
@@ -59,50 +61,52 @@ HRESULT InitialiseEnvironment( LPDIRECT3DDEVICE3 lpd3dDevice,
                                LPDIRECT3DVIEWPORT3 pvViewport, HWND hwnd )
 {
 
-	if ( !  LoadFile("bird1.asc", Bird->currentFrame, 100 ) )
+	if ( !  LoadFile("resource/Human1.asc", Human->currentFrame, 100 ) )
 		return E_FAIL;
 	
-	if (!Bird->AdvanceFrame()) return E_FAIL;
+	if (!Human->AdvanceFrame()) return E_FAIL;
 
-	if ( !  LoadFile("bird15.asc", Bird->currentFrame, 100)  )
+	if ( !  LoadFile("resource/Human15.asc", Human->currentFrame, 100)  )
 		return E_FAIL;
 	
 		
-Bird->AdvanceFrame();
-	if ( !  LoadFile("bird2.asc", Bird->currentFrame, 100)  )
+Human->AdvanceFrame();
+	if ( !  LoadFile("resource/Human2.asc", Human->currentFrame, 100)  )
 		return E_FAIL;	
-if (!Bird->AdvanceFrame()) return E_FAIL;
-	if ( !  LoadFile("bird25.asc", Bird->currentFrame, 100)  )
+if (!Human->AdvanceFrame()) return E_FAIL;
+	if ( !  LoadFile("resource/Human25.asc", Human->currentFrame, 100)  )
 		return E_FAIL;
-Bird->AdvanceFrame();	
-	if ( !  LoadFile("bird3.asc", Bird->currentFrame, 100)  )
+Human->AdvanceFrame();	
+	if ( !  LoadFile("resource/Human3.asc", Human->currentFrame, 100)  )
 		return E_FAIL;
-Bird->AdvanceFrame();
-	if ( !  LoadFile("bird35.asc", Bird->currentFrame, 100)  )
+Human->AdvanceFrame();
+	if ( !  LoadFile("resource/Human35.asc", Human->currentFrame, 100)  )
 		return E_FAIL;
-Bird->AdvanceFrame();	
-	if ( ! LoadFile("bird4.asc", Bird->currentFrame, 100)  )
+Human->AdvanceFrame();	
+	if ( ! LoadFile("resource/Human4.asc", Human->currentFrame, 100)  )
 		return E_FAIL;
-Bird->AdvanceFrame();	
-	if ( ! LoadFile("bird45.asc", Bird->currentFrame, 100)  )
+Human->AdvanceFrame();	
+	if ( ! LoadFile("resource/Human45.asc", Human->currentFrame, 100)  )
 		return E_FAIL;
-Bird->AdvanceFrame();
-	if ( ! LoadFile("bird5.asc", Bird->currentFrame, 100)  )
+Human->AdvanceFrame();
+	if ( ! LoadFile("resource/Human5.asc", Human->currentFrame, 100)  )
 		return E_FAIL;
-Bird->AdvanceFrame();	
-	if ( ! LoadFile("bird55.asc", Bird->currentFrame, 100)  )
+Human->AdvanceFrame();	
+	if ( ! LoadFile("resource/Human55.asc", Human->currentFrame, 100)  )
 		return E_FAIL;
-Bird->AdvanceFrame();
-	if ( ! LoadFile("bird6.asc", Bird->currentFrame, 100)  )
+Human->AdvanceFrame();
+	if ( ! LoadFile("resource/Human6.asc", Human->currentFrame, 100)  )
 		return E_FAIL;
-Bird->AdvanceFrame();	
-	if ( ! LoadFile("bird65.asc", Bird->currentFrame, 100)  )
+Human->AdvanceFrame();	
+	if ( ! LoadFile("resource/Human65.asc", Human->currentFrame, 100)  )
 		return E_FAIL;
-Bird->AdvanceFrame();
+Human->AdvanceFrame();
 
-	if (! Bird->LoadTextures(Textures, lpd3dDevice, hwnd) ) return E_FAIL;
+	cout << "Files Loaded" << endl << flush;
 
+	if (! Human->LoadTextures(Textures, lpd3dDevice, hwnd) ) return E_FAIL;
 
+	cout << "Textures Loaded" << endl << flush;
 
 	// Get a ptr to the ID3D object to create materials and/or lights. Note:
 	// the Release() call just serves to decrease the ref count.
@@ -147,7 +151,12 @@ Bird->AdvanceFrame();
     g_pmtrlObjectMtrl2->SetMaterial( &mtrl2 );
 	
 
-    lpd3dDevice->SetRenderState( D3DRENDERSTATE_ZENABLE, TRUE );
+	lpd3dDevice->SetRenderState( D3DRENDERSTATE_ZENABLE, TRUE );
+	lpd3dDevice->SetRenderState( D3DRENDERSTATE_TEXTUREPERSPECTIVE, TRUE );
+	lpd3dDevice->SetRenderState( D3DRENDERSTATE_SUBPIXEL, TRUE );
+	lpd3dDevice->SetRenderState( D3DRENDERSTATE_FILLMODE, D3DRENDERSTATE_FILLMODE );
+	lpd3dDevice->SetRenderState( D3DRENDERSTATE_CULLMODE, D3DCULL_NONE );
+	lpd3dDevice->SetRenderState( D3DRENDERSTATE_DITHERENABLE, FALSE );
 
 	// Put the object material into effect. Direct3D is a state machine, and
 	// calls like this set the current state. After this call, any polygons
@@ -349,9 +358,9 @@ HRESULT RenderView( LPDIRECT3DDEVICE3 pd3dDevice,
 
 	// FOR ALL OBJECTS
 
-	TotalElements = Bird->currentFrame->TotalElements;
+	TotalElements = Human->currentFrame->TotalElements;
 
-	TempElements = Bird->currentFrame->ElementList;
+	TempElements = Human->currentFrame->ElementList;
 
 
 
@@ -371,14 +380,14 @@ HRESULT RenderView( LPDIRECT3DDEVICE3 pd3dDevice,
 
 		
 		}
-		if ( time++ >= 5) {
+		if ( time++ >= 10) {
 			
 			FrameCount++;
 			time = 0;
-			Bird->AdvanceFrame();
+			Human->AdvanceFrame();
 		}
 
-		if ( FrameCount >= Bird->TotalFrames ) FrameCount = 0;
+		if ( FrameCount >= Human->TotalFrames ) FrameCount = 0;
 
 
 
