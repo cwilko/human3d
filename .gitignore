@@ -1,5 +1,4 @@
 *.obj
 *.exe
 out.log
-sandbox/*
 *.*~
